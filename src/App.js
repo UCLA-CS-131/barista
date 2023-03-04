@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import Editor from 'react-simple-code-editor';
 
+const DEFAULT_PROGRAM =
+`func main
+ assign v1 20
+ funccall print v1
+endfunc`;
+
 function App() {
-  const [program, setProgram] = useState('boop');
+  const [program, setProgram] = useState(DEFAULT_PROGRAM);
   const [version, setVersion] = useState('1');
   const [output, setOutput] = useState('')
 
   function runProgram() {
-    fetch('http://localhost:8000/f22', {
+    fetch('/f22', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

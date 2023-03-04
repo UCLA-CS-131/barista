@@ -13,6 +13,11 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def not_found(e):
     return "error"
 
+# this is the result from building CRA
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
 @app.post('/f22')
 def f22():
   data = request.json
