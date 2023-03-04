@@ -7,7 +7,69 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
+code, .editor {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+hr {
+  border: 0.25px solid white;
+}
+
+.App {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.container {
+  max-width: 50rem;
+}
+
+.editor {
+  min-width: 50rem;
+  max-width: 100%;
+  min-height: 200px;
+  background: #f3f3f3;
+  color: #282c34;
+  font-size: 1rem;
+  margin: 1rem auto;
+}
+
+.inline {
+  display: inline;
+}
+
+.btn{
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  background: transparent;
+  color: inherit;
+  border: none;
+  border-radius:.25rem;
+  padding: 0.5rem 1rem;
+}
+
+.btn-blue {
+  background-color:rgb(59 130 246);
+  border: 1px solid rgb(59 130 246);
+  color: white;
+}
+
+.btn-blue-outline {
+  border: 1px solid rgb(59 130 246);
+}
+
+.btn-blue:hover{
+  background-color:rgb(29 78 216)
+}
+
+.mr-0-5 {
+  margin-right: 0.5rem;
 }

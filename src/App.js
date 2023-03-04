@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import './App.css';
+import Editor from 'react-simple-code-editor';
 
 function App() {
-  const [program, setProgram] = useState('');
+  const [program, setProgram] = useState('boop');
   const [version, setVersion] = useState('1');
   const [output, setOutput] = useState('')
 
@@ -23,16 +23,39 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <textarea value={program} onChange={(e) => setProgram(e.target.value)} />
-        <select value={version} onChange={(e) => setVersion(e.target.value)}>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
+      <div className="container">
+        <h1 className='inline'>☕ barista</h1>
+        &nbsp;
+        <p className='inline'>| brewin as a service</p>
+        <hr />
+        <select className="btn btn-blue-outline mr-0-5" style={{paddingLeft: '0.25rem'}} value={version} onChange={(e) => setVersion(e.target.value)}>
+          <option value="1">fall 2022</option>
         </select>
-        <button onClick={runProgram}>send</button>
-        {output}
-      </header>
+        <select className="btn btn-blue-outline mr-0-5" style={{paddingLeft: '0.25rem'}} value={version} onChange={(e) => setVersion(e.target.value)}>
+          <option value="1">1: brewin</option>
+          <option value="2">2: brewin++</option>
+          <option value="3">3: brewin#</option>
+        </select>
+        <button className="btn btn-blue" onClick={runProgram}>run</button>
+
+        <h2>your code</h2>
+        <Editor
+          className='editor'
+          value={program}
+          onValueChange={program => setProgram(program)}
+          highlight={code => code /* this is an identity -- no highlighting */}
+          padding={10}
+        />
+
+        <h2>our output</h2>
+        <Editor
+          className='editor'
+          value={output}
+          highlight={code => code /* this is an identity -- no highlighting */}
+          padding={10}
+          readOnly={true}
+        />
+      </div>
     </div>
   );
 }

@@ -26,6 +26,5 @@ def f22():
     return { "res": res }
   except Exception as e:
     return {
-      "res": 'error',
-      "err": str(e)
+      "res": f'interpreter error: {str(e)}'
     }
