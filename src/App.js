@@ -1,31 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [currentTime, setCurrentTime] = useState(0);
+  const [program, setProgram] = useState('');
+  const [version, setVersion] = useState('1');
+  const [output, setOutput] = useState('')
 
-  useEffect(() => {
-    fetch('http://localhost:8000/api/time').then(res => res.json()).then(data => {
-      setCurrentTime(data.time);
+  function runProgram() {
+    fetch('http://localhost:8000/f22', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        program,
+        version,
+      }),
+    }).then(res => res.json()).then(data => {
+      setOutput(data.res)
     });
-  }, []);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>The current time is {currentTime}.</p>
+        <textarea value={program} onChange={(e) => setProgram(e.target.value)} />
+        <select value={version} onChange={(e) => setVersion(e.target.value)}>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+        <button onClick={runProgram}>send</button>
+        {output}
       </header>
     </div>
   );
