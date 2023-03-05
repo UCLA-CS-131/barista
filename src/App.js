@@ -7,13 +7,15 @@ const DEFAULT_PROGRAM =
  funccall print v1
 endfunc`;
 
+const ENDPOINT = process.env.NODE_ENV === 'development' ? 'http://localhost:8000/f22' : '/f22'
+
 function App() {
   const [program, setProgram] = useState(DEFAULT_PROGRAM);
   const [version, setVersion] = useState('1');
   const [output, setOutput] = useState('')
 
   function runProgram() {
-    fetch('/f22', {
+    fetch(ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

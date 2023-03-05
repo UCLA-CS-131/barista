@@ -11,10 +11,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-api": "cd api && venv/bin/flask run --port 8000",
+    "start-api": "venv/bin/flask run --port 8000",
+    "setup-venv": "python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "venv": "source venv/bin/activate"
   },
   "eslintConfig": {
     "extends": [
