@@ -18,7 +18,10 @@
     "start-api": "venv/bin/flask run --port 8000",
     "setup-py": "python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "format": "prettier src --write",
+    "lint": "npm-run-all --parallel --continue-on-error lint:*",
+    "lint:js": "eslint src --cache --max-warnings=0 --ext .js,.ts,.tsx",
+    "lint:types": "tsc",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -40,6 +43,12 @@
   },
   "proxy": "http://localhost:8000",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "eslint-plugin-react": "^7.32.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "2.8.4",
     "tailwindcss": "^3.2.7"
   }
 }
