@@ -62,7 +62,6 @@ code, .editor {
   max-width: calc(100vw - 16rem);
   min-height: 200px;
   font-size: 1rem;
-  margin: 1rem auto;
 }
 
 .main-container {

@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import Editor from 'react-simple-code-editor';
-
-const DEFAULT_PROGRAM =
-`func main
- assign v1 20
- funccall print v1
-endfunc`;
-
-const ENDPOINT = process.env.NODE_ENV === 'development' ? 'http://localhost:8000/f22' : '/f22'
+import PreviousBrew from './PreviousBrew';
+import { DEFAULT_PROGRAM, ENDPOINT } from './constants';
 
 function App() {
   const [program, setProgram] = useState(DEFAULT_PROGRAM);
@@ -17,10 +11,10 @@ function App() {
 
   const lastResponse = responses.length === 0 ? {iteration: 0} : responses[responses.length - 1];
 
-  function addResponse(code, output, version, iteration) {
+  function addResponse(program, output, version, iteration) {
     let n = [...responses];
     n.push({
-      program: code,
+      program,
       version,
       output,
       iteration,
@@ -32,8 +26,8 @@ function App() {
     setOutput(output);
   }
 
-  function loadProgram(code, output, version) {
-    setProgram(code);
+  function loadProgram(program, output, version) {
+    setProgram(program);
     setOutput(output);
     setVersion(version);
   }
@@ -55,17 +49,11 @@ function App() {
 
   function PastBrews({responses, loadProgram}) {
     if (responses.length === 0) {
-      return <div>no brews yet!</div>
+      return <p>no brews yet!</p>
     }
     return (
       <ul className='p-0 list-none'>
-        {responses.map((resp, i) => <li className='single-run border-t py-2 text-ellipsis overflow-hidden whitespace-nowrap' key={resp.program + i}>
-          brew #{resp.iteration} | <button onClick={() => loadProgram(resp.program, resp.output, resp.version)}>load</button>
-          <br />
-          in: {resp.program}
-          <br />
-          out: {resp.output}
-        </li>).reverse()}
+        {responses.map(({program, output, version, iteration}) => <PreviousBrew program={program} output={output} version={version} iteration={iteration} loadProgram={loadProgram} key={iteration} />).reverse()}
       </ul>
     )
   }
@@ -74,36 +62,38 @@ function App() {
     <div className="App">
       <main className='main-container'>
         <div></div> {/* empty div for grid */}
-        <div>
-          <header>
-            <h1 className='text-2xl'><span className='font-bold'>☕ barista</span> | brewin as a service</h1>
-          </header>
+        <header>
+          <h1 className='text-3xl'><span className='font-bold'>☕ barista</span> | brewin as a service</h1>
           <hr className='my-2' />
-          <select className="btn btn-blue-outline mr-1 pl-1">
-            <option value="1">fall 2022</option>
-          </select>
-          <select className="btn btn-blue-outline mr-1 pl-1" value={version} onChange={(e) => setVersion(e.target.value)}>
-            <option value="1">1: brewin</option>
-            <option value="2">2: brewin++</option>
-            <option value="3">3: brewin#</option>
-          </select>
-          <button className="btn btn-blue" onClick={runProgram}>brew!</button>
-        </div>
-        <div>
-          <h2 className='text-xl mb-1'>past brews</h2>
+        </header>
+        <section>
+          <h2 className='text-xl font-semibold mb-1'>past brews</h2>
           <PastBrews responses={responses} loadProgram={loadProgram} />
-        </div>
+        </section>
         <div>
-          <h2 className='text-xl'>your recipe</h2>
+          <section className='flex flex-row justify-between'>
+            <h2 className='text-xl font-semibold'>your recipe</h2>
+            <div>
+              <select className="btn btn-blue-outline mr-1 pl-1" disabled>
+                <option value="1">fall 2022</option>
+              </select>
+              <select className="btn btn-blue-outline mr-1 pl-1" value={version} onChange={(e) => setVersion(e.target.value)}>
+                <option value="1">v1: brewin</option>
+                <option value="2">v2: brewin++</option>
+                <option value="3">v3: brewin#</option>
+              </select>
+              <button className="btn btn-blue" onClick={runProgram}>brew!</button>
+            </div>
+          </section>
           <Editor
-            className='editor border'
+            className='editor border my-1'
             value={program}
             onValueChange={program => setProgram(program)}
             highlight={code => code /* this is an identity -- no highlighting */}
             padding={10}
           />
 
-          <h2 className='text-xl'>your brew</h2>
+          <h2 className='text-xl font-semibold mt-3 mb-1'>your brew</h2>
           <Editor
             className='editor border'
             value={output}
@@ -112,6 +102,12 @@ function App() {
             readOnly={true}
           />
         </div>
+        <footer>
+          <hr className='my-1' />
+          <p className='text-xs'>
+            made by <a className='underline' href="https://matthewwang.me">matt</a> for <a className='underline' href="https://github.com/UCLA-CS-131">CS 131</a>; on <a className='underline' href="https://github.com/UCLA-CS-131/barista">github</a>
+          </p>
+        </footer>
       </main>
     </div>
   );
