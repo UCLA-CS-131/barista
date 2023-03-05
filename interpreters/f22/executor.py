@@ -14,7 +14,7 @@ def run(version, raw_program):
     case "3":
       interpreter = interpreterv3
     case _:
-      raise 'error'
+      raise 'invalid version'
 
   program = process_input(raw_program)
 

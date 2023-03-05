@@ -28,6 +28,4 @@ ENV PYTHONUNBUFFERED 1
 
 EXPOSE 8000
 
-# ENTRYPOINT \[ "gunicorn" \]
-# CMD \[ "api:app", "--bind=0.0.0.0:8000" \]
 CMD ["gunicorn"  , "-b", "0.0.0.0:8000", "app:app"]

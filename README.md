@@ -7,7 +7,7 @@ Overall, *barista* is a small "web wrapper" around the core project interpreter 
 - a small [Flask](https://github.com/pallets/flask) server that runs arbitrary Brewin code and returns the result/error
 - a tiny [React](https://reactjs.org/) app that provides an interface to use the server
 
-Broadly, we package the React app as a static HTML page with [Create React App](https://create-react-app.dev/), and then serve that HTML with Flask as a root. 
+Broadly, we package the React app as a static HTML page with [Create React App](https://create-react-app.dev/), and then serve that HTML with Flask as a root.
 
 This is nothing fancy (or bleeding-edge), and it's probably not the best way to do this --- but, it works :)
 
@@ -20,8 +20,8 @@ This project blends a typical Python and Node workflow. To run the entire app lo
 First, set up the environment; we've added some `npm` helpers:
 
 ```sh
-$ npm install 
-$ npm run setup-venv # sets up a venv and installs with pip
+$ npm install
+$ npm run setup-py # sets up a venv and installs with pip
 ```
 
 To run the Flask server in dev mode,
@@ -74,14 +74,14 @@ There's some low-hanging fruit:
 - the `Dockerfile` stages are not as efficient/slim as they could be
 - the `interpreters` structure is not well-designed; making it a module is probably a good first step
 - we haven't configured web vitals, manifests, etc.
-- the site is not mobile-friendly :( 
+- the site is not mobile-friendly :(
 
 And bigger picture,
 
 - React is overkill for the frontend; we could certainly accomplish the same thing with preact or Flask templates, both of which would significantly reduce the bundle size and complexity of the build
 - and, if we did stick with React, using a framework that's a bit more powerful/customizable than Create React App would let us eke out better performance / bundle size / ergonomics
 - the code editing experience *could* be better -- for example, if we wrote a custom syntax highlighter for the language
-- it may be possible to do *all* of this in WASM instead! 
+- it may be possible to do *all* of this in WASM instead!
 
 
 If you have any ideas, a PR is always welcome!
