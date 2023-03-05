@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Editor from 'react-simple-code-editor';
 import PreviousBrew from './PreviousBrew';
 import { DEFAULT_PROGRAM, ENDPOINT } from './constants';
+import { LoadProgram, RunResponse } from './types';
 
 function App() {
   const [program, setProgram] = useState(DEFAULT_PROGRAM);
   const [version, setVersion] = useState('1');
   const [output, setOutput] = useState('');
-  const [responses, setResponses] = useState([]);
+  const [responses, setResponses] = useState<RunResponse[]>([]);
 
   const lastResponse = responses.length === 0 ? {iteration: 0} : responses[responses.length - 1];
 
-  function addResponse(program, output, version, iteration) {
+  function addResponse(program: string, output: string, version: string, iteration: number) {
     let n = [...responses];
     n.push({
       program,
@@ -26,7 +27,7 @@ function App() {
     setOutput(output);
   }
 
-  function loadProgram(program, output, version) {
+  function loadProgram(program: string, output: string, version: string) {
     setProgram(program);
     setOutput(output);
     setVersion(version);
@@ -47,13 +48,13 @@ function App() {
     });
   }
 
-  function PastBrews({responses, loadProgram}) {
+  function PastBrews({responses, loadProgram}: {responses: RunResponse[], loadProgram: LoadProgram}) {
     if (responses.length === 0) {
       return <p>no brews yet!</p>
     }
     return (
       <ul className='p-0 list-none'>
-        {responses.map(({program, output, version, iteration}) => <PreviousBrew program={program} output={output} version={version} iteration={iteration} loadProgram={loadProgram} key={iteration} />).reverse()}
+        {responses.map(response => <PreviousBrew response={response} loadProgram={loadProgram} key={response.iteration} />).reverse()}
       </ul>
     )
   }
@@ -97,6 +98,7 @@ function App() {
           <Editor
             className='editor border'
             value={output}
+            onValueChange={() => ''}
             highlight={code => code /* this is an identity -- no highlighting */}
             padding={10}
             readOnly={true}

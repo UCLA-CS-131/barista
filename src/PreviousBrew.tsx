@@ -1,4 +1,12 @@
-export default function PreviousBrew({program, output, version, iteration, loadProgram}) {
+import { LoadProgram, RunResponse } from './types';
+
+type Props = {
+  response: RunResponse,
+  loadProgram: LoadProgram
+}
+
+export default function PreviousBrew({response, loadProgram}: Props) {
+  const { program, output, version, iteration } = response;
   return (
     <li className='single-run border-t py-2 text-ellipsis overflow-hidden whitespace-nowrap'>
       <span className='flex flex-row justify-between'>
