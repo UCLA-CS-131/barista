@@ -1,10 +1,47 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.btn {
+		@apply font-bold py-2 px-4 rounded;
+	}
+	.btn-blue {
+		@apply bg-blue-500 text-white;
+	}
+	.btn-blue:hover {
+		@apply bg-blue-700;
+	}
+  .btn-blue-outline {
+    @apply border border-blue-500 font-normal;
+  }
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #242424;
+    background-color: rgba(255, 255, 255, 0.87);
+  }
+}
+
+body {
+  margin: 0;
 }
 
 code, .editor {
@@ -12,66 +49,20 @@ code, .editor {
     monospace;
 }
 
-hr {
-  border: 0.25px solid white;
-}
-
 .App {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
-}
-
-.container {
-  /* max-width: 50rem; */
 }
 
 .editor {
   width: 50rem;
   max-width: calc(100vw - 16rem);
   min-height: 200px;
-  background: #f3f3f3;
-  color: #282c34;
   font-size: 1rem;
   margin: 1rem auto;
-}
-
-.inline {
-  display: inline;
-}
-
-.btn{
-  font-family: inherit;
-  font-size: 100%;
-  font-weight: inherit;
-  line-height: inherit;
-  background: transparent;
-  color: inherit;
-  border: none;
-  border-radius:.25rem;
-  padding: 0.5rem 1rem;
-}
-
-.btn-blue {
-  background-color:rgb(59 130 246);
-  border: 1px solid rgb(59 130 246);
-  color: white;
-}
-
-.btn-blue-outline {
-  border: 1px solid rgb(59 130 246);
-}
-
-.btn-blue:hover{
-  background-color:rgb(29 78 216)
-}
-
-.mr-0-5 {
-  margin-right: 0.5rem;
 }
 
 .main-container {
@@ -82,14 +73,4 @@ hr {
 
 .single-run {
   max-width: 10rem;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  border-top: 1px solid white;
-  padding: 1rem 0;
-}
-
-.run-list {
-  list-style: none;
-  padding: 0;
 }
