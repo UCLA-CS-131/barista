@@ -1,6 +1,6 @@
 export type RunResponse = {
   program: string;
-  version: string;
+  interpreterVersion: InterpreterVersion;
   output: string;
   iteration: number;
 };
@@ -8,5 +8,11 @@ export type RunResponse = {
 export type LoadProgram = (
   program: string,
   output: string,
-  version: string
+  interpreterVersion: InterpreterVersion
 ) => void;
+
+// TODO: we can narrow these types
+export type InterpreterVersion = {
+  quarter: string;
+  version: string;
+};

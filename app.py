@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 
-from interpreters.f22 import executor
+from interpreters.f22 import executor as executorf22
 
 app = Flask(__name__, static_folder='build', static_url_path='/')
 cors = CORS(app)
@@ -25,7 +25,7 @@ def f22():
         "res": "malformed req"
     }
   try:
-    res = executor.run(data["version"], data["program"])
+    res = executorf22.run(data["version"], data["program"])
     return { "res": res }
   except Exception as e:
     return {
