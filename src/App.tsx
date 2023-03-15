@@ -9,9 +9,16 @@ function App() {
   const [version, setVersion] = useState("1");
   const [output, setOutput] = useState("");
   const [responses, setResponses] = useState<RunResponse[]>([]);
+  const [baristaMode, setBaristaMode] = useState(false);
 
   const lastResponse =
     responses.length === 0 ? { iteration: 0 } : responses[responses.length - 1];
+
+  // this is just flavour text helpers
+  const TEXT_CODE = baristaMode ? "recipe" : "code";
+  const TEXT_OUTPUT = baristaMode ? "brew" : "output";
+  const TEXT_PROGRAMS = baristaMode ? "blends" : "programs";
+  const TEXT_RUN = baristaMode ? "roast" : "run";
 
   function addResponse(
     program: string,
@@ -64,13 +71,14 @@ function App() {
     loadProgram: LoadProgram;
   }) {
     if (responses.length === 0) {
-      return <p>no brews yet!</p>;
+      return <p>no {TEXT_PROGRAMS} yet!</p>;
     }
     return (
       <ul className="p-0 list-none">
         {responses
           .map((response) => (
             <PreviousBrew
+              baristaMode={baristaMode}
               response={response}
               loadProgram={loadProgram}
               key={response.iteration}
@@ -92,12 +100,12 @@ function App() {
           <hr className="my-2" />
         </header>
         <section>
-          <h2 className="text-xl font-semibold mb-1">past brews</h2>
+          <h2 className="text-xl font-semibold mb-1">past {TEXT_PROGRAMS}</h2>
           <PastBrews responses={responses} loadProgram={loadProgram} />
         </section>
         <div>
           <section className="flex flex-row justify-between">
-            <h2 className="text-xl font-semibold">your recipe</h2>
+            <h2 className="text-xl font-semibold">your {TEXT_CODE}</h2>
             <div>
               <select className="btn btn-blue-outline mr-1 pl-1" disabled>
                 <option value="1">fall 2022</option>
@@ -112,7 +120,7 @@ function App() {
                 <option value="3">v3: brewin#</option>
               </select>
               <button className="btn btn-blue" onClick={runProgram}>
-                brew!
+                {TEXT_RUN}!
               </button>
             </div>
           </section>
@@ -126,7 +134,9 @@ function App() {
             padding={10}
           />
 
-          <h2 className="text-xl font-semibold mt-3 mb-1">your brew</h2>
+          <h2 className="text-xl font-semibold mt-3 mb-1">
+            your {TEXT_OUTPUT}
+          </h2>
           <Editor
             className="editor border"
             value={output}
@@ -156,6 +166,13 @@ function App() {
             >
               github
             </a>
+            .{" "}
+            <button
+              className="underline"
+              onClick={() => setBaristaMode(!baristaMode)}
+            >
+              barista mode.
+            </button>
           </p>
         </footer>
       </main>

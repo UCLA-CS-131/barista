@@ -3,14 +3,21 @@ import { LoadProgram, RunResponse } from "./types";
 type Props = {
   response: RunResponse;
   loadProgram: LoadProgram;
+  baristaMode: boolean;
 };
 
-export default function PreviousBrew({ response, loadProgram }: Props) {
+export default function PreviousBrew({
+  baristaMode,
+  response,
+  loadProgram,
+}: Props) {
   const { program, output, version, iteration } = response;
   return (
     <li className="single-run border-t py-2 text-ellipsis overflow-hidden whitespace-nowrap">
       <span className="flex flex-row justify-between">
-        <span>brew #{iteration}</span>
+        <span>
+          {baristaMode ? "blend" : "program"} #{iteration}
+        </span>
         <button
           className="underline"
           onClick={() => loadProgram(program, output, version)}
