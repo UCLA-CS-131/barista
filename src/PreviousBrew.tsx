@@ -11,7 +11,7 @@ export default function PreviousBrew({
   response,
   loadProgram,
 }: Props) {
-  const { program, output, interpreterVersion, iteration } = response;
+  const { program, output, stdin, interpreterVersion, iteration } = response;
   return (
     <li className="single-run border-t py-2 text-ellipsis overflow-hidden whitespace-nowrap">
       <span className="flex flex-row justify-between">
@@ -20,7 +20,7 @@ export default function PreviousBrew({
         </span>
         <button
           className="underline"
-          onClick={() => loadProgram(program, output, interpreterVersion)}
+          onClick={() => loadProgram(program, stdin, output, interpreterVersion)}
         >
           load
         </button>
@@ -28,7 +28,7 @@ export default function PreviousBrew({
       <span className="text-xs">
         code: <code>{program}</code>
         <br />
-        out: <code>{output}</code>
+        in: <code>{stdin.trim() === '' ? '-' : stdin}</code> | out: <code>{output}</code>
       </span>
     </li>
   );

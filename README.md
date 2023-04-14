@@ -21,7 +21,10 @@ First, set up the environment; we've added some `npm` helpers:
 
 ```sh
 $ npm install
-$ npm run setup-py # sets up a venv and installs with pip
+# sets up a venv and installs with pip
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
 ```
 
 To run the Flask server in dev mode,

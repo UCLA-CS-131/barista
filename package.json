@@ -16,7 +16,6 @@
   "scripts": {
     "start": "react-scripts start",
     "start-api": "venv/bin/flask run --port 8000",
-    "setup-py": "python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
     "build": "react-scripts build",
     "format": "prettier src --write",
     "lint": "npm-run-all --parallel --continue-on-error lint:*",
@@ -41,7 +40,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8000",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",

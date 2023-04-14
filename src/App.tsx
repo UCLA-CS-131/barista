@@ -6,11 +6,13 @@ import {
   ENDPOINT,
   F22_VERSIONS,
   S23_VERSIONS,
+  getFlavourText,
 } from "./constants";
 import { InterpreterVersion, LoadProgram, RunResponse } from "./types";
 
 function App() {
   const [program, setProgram] = useState(DEFAULT_PROGRAM);
+  const [stdin, setStdin] = useState('');
   const [interpreterVersion, setInterpreterVersion] =
     useState<InterpreterVersion>({ quarter: "f22", version: "1" });
   const [output, setOutput] = useState("");
@@ -24,11 +26,7 @@ function App() {
   const lastResponse =
     responses.length === 0 ? { iteration: 0 } : responses[responses.length - 1];
 
-  // this is just flavour text helpers
-  const TEXT_CODE = baristaMode ? "recipe" : "code";
-  const TEXT_OUTPUT = baristaMode ? "brew" : "output";
-  const TEXT_PROGRAMS = baristaMode ? "blends" : "programs";
-  const TEXT_RUN = baristaMode ? "roast" : "run";
+  const { TEXT_CODE, TEXT_OUTPUT, TEXT_PROGRAMS, TEXT_RUN, TEXT_STDIN } = getFlavourText(baristaMode)
 
   const setQuarter = (quarter: string) =>
     setInterpreterVersion({ ...interpreterVersion, quarter });
@@ -37,6 +35,7 @@ function App() {
 
   function addResponse(
     program: string,
+    stdin: string,
     output: string,
     interpreterVersion: InterpreterVersion,
     iteration: number
@@ -44,8 +43,9 @@ function App() {
     let n = [...responses];
     n.push({
       program,
-      interpreterVersion,
+      stdin,
       output,
+      interpreterVersion,
       iteration,
     });
     if (n.length > 5) {
@@ -57,10 +57,12 @@ function App() {
 
   function loadProgram(
     program: string,
+    stdin: string,
     output: string,
     interpreterVersion: InterpreterVersion
   ) {
     setProgram(program);
+    setStdin(stdin);
     setOutput(output);
     setInterpreterVersion(interpreterVersion);
   }
@@ -73,6 +75,7 @@ function App() {
       },
       body: JSON.stringify({
         program,
+        stdin,
         version,
       }),
     })
@@ -80,6 +83,7 @@ function App() {
       .then((data) => {
         addResponse(
           program,
+          stdin,
           data.res,
           interpreterVersion,
           lastResponse.iteration + 1
@@ -164,6 +168,18 @@ function App() {
               (code) => code /* this is an identity -- no highlighting */
             }
             padding={10}
+          />
+
+          <h2 className="text-xl font-semibold">your {TEXT_STDIN}</h2>
+          <Editor
+            className="editor border my-1"
+            value={stdin}
+            onValueChange={(stdin) => setStdin(stdin)}
+            highlight={
+              (code) => code /* this is an identity -- no highlighting */
+            }
+            padding={10}
+            style={{minHeight: "1rem"}}
           />
 
           <h2 className="text-xl font-semibold mt-3 mb-1">

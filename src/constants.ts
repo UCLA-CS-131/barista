@@ -17,3 +17,13 @@ export const S23_VERSIONS = [
   { version: "2", title: "brewin++" },
   { version: "3", title: "brewin#" },
 ];
+
+export const getFlavourText = (baristaMode: boolean) => {
+  return {
+    TEXT_CODE: baristaMode ? "recipe" : "code",
+    TEXT_OUTPUT: baristaMode ? "brew" : "output",
+    TEXT_PROGRAMS: baristaMode ? "blends" : "programs",
+    TEXT_RUN: baristaMode ? "roast" : "run",
+    TEXT_STDIN: baristaMode ? "add-ins" : "stdin"
+  }
+}

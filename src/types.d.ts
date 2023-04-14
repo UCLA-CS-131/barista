@@ -1,5 +1,6 @@
 export type RunResponse = {
   program: string;
+  stdin: string;
   interpreterVersion: InterpreterVersion;
   output: string;
   iteration: number;
@@ -7,6 +8,7 @@ export type RunResponse = {
 
 export type LoadProgram = (
   program: string,
+  stdin: string,
   output: string,
   interpreterVersion: InterpreterVersion
 ) => void;
