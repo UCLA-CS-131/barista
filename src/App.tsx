@@ -12,7 +12,7 @@ import { InterpreterVersion, LoadProgram, RunResponse } from "./types";
 
 function App() {
   const [program, setProgram] = useState(DEFAULT_PROGRAM);
-  const [stdin, setStdin] = useState('');
+  const [stdin, setStdin] = useState("");
   const [interpreterVersion, setInterpreterVersion] =
     useState<InterpreterVersion>({ quarter: "f22", version: "1" });
   const [output, setOutput] = useState("");
@@ -26,7 +26,8 @@ function App() {
   const lastResponse =
     responses.length === 0 ? { iteration: 0 } : responses[responses.length - 1];
 
-  const { TEXT_CODE, TEXT_OUTPUT, TEXT_PROGRAMS, TEXT_RUN, TEXT_STDIN } = getFlavourText(baristaMode)
+  const { TEXT_CODE, TEXT_OUTPUT, TEXT_PROGRAMS, TEXT_RUN, TEXT_STDIN } =
+    getFlavourText(baristaMode);
 
   const setQuarter = (quarter: string) =>
     setInterpreterVersion({ ...interpreterVersion, quarter });
@@ -81,10 +82,11 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
+        const output = Array.isArray(data.res) ? data.res.join("\n") : data.res;
         addResponse(
           program,
           stdin,
-          data.res,
+          output,
           interpreterVersion,
           lastResponse.iteration + 1
         );
@@ -179,20 +181,15 @@ function App() {
               (code) => code /* this is an identity -- no highlighting */
             }
             padding={10}
-            style={{minHeight: "1rem"}}
+            style={{ minHeight: "1rem" }}
           />
 
           <h2 className="text-xl font-semibold mt-3 mb-1">
             your {TEXT_OUTPUT}
           </h2>
-          <Editor
-            className="editor border"
+          <textarea
+            className="editor border p-2"
             value={output}
-            onValueChange={() => ""}
-            highlight={
-              (code) => code /* this is an identity -- no highlighting */
-            }
-            padding={10}
             readOnly={true}
           />
         </div>

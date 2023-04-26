@@ -20,7 +20,9 @@ export default function PreviousBrew({
         </span>
         <button
           className="underline"
-          onClick={() => loadProgram(program, stdin, output, interpreterVersion)}
+          onClick={() =>
+            loadProgram(program, stdin, output, interpreterVersion)
+          }
         >
           load
         </button>
@@ -28,7 +30,8 @@ export default function PreviousBrew({
       <span className="text-xs">
         code: <code>{program}</code>
         <br />
-        in: <code>{stdin.trim() === '' ? '-' : stdin}</code> | out: <code>{output}</code>
+        in: <code>{stdin.trim() === "" ? "-" : stdin}</code> | out:{" "}
+        <code>{output}</code>
       </span>
     </li>
   );

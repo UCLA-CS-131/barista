@@ -24,6 +24,6 @@ export const getFlavourText = (baristaMode: boolean) => {
     TEXT_OUTPUT: baristaMode ? "brew" : "output",
     TEXT_PROGRAMS: baristaMode ? "blends" : "programs",
     TEXT_RUN: baristaMode ? "roast" : "run",
-    TEXT_STDIN: baristaMode ? "add-ins" : "stdin"
-  }
-}
+    TEXT_STDIN: baristaMode ? "add-ins" : "stdin",
+  };
+};
