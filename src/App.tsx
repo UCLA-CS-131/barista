@@ -14,7 +14,7 @@ function App() {
   const [program, setProgram] = useState(DEFAULT_PROGRAM);
   const [stdin, setStdin] = useState("");
   const [interpreterVersion, setInterpreterVersion] =
-    useState<InterpreterVersion>({ quarter: "f22", version: "1" });
+    useState<InterpreterVersion>({ quarter: "s23", version: "2" });
   const [output, setOutput] = useState("");
   const [responses, setResponses] = useState<RunResponse[]>([]);
   const [baristaMode, setBaristaMode] = useState(false);
@@ -141,7 +141,6 @@ function App() {
                 className="btn btn-blue-outline mr-1 pl-1"
                 value={quarter}
                 onChange={(e) => setQuarter(e.target.value)}
-                disabled
               >
                 <option value="f22">fall 2022</option>
                 <option value="s23">spring 2023</option>
