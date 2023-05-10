@@ -15,7 +15,7 @@ const getFlavourText = (baristaMode: boolean) => {
 const ENDPOINT =
   process.env.NODE_ENV === "development" ? "http://localhost:8000/" : "/";
 
-const DEFAULT_VERSION = S23_VERSIONS[0];
+const DEFAULT_VERSION = S23_VERSIONS[2];
 
 export {
   getFlavourText,
