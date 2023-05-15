@@ -1,15 +1,10 @@
 import { useContext, useState } from "react";
 import Editor from "react-simple-code-editor";
-import {
-  DEFAULT_VERSION,
-  ENDPOINT,
-  F22_VERSIONS,
-  S23_VERSIONS,
-  getFlavourText,
-} from "../constants";
+import { DEFAULT_VERSION, ENDPOINT, getFlavourText } from "../constants";
 import { InterpreterVersion, RunResponse } from "../types";
 import { BaristaContext } from "../BaristaContext";
 import PastBrews from "./PastBrews";
+import EditorToolbar from "./EditorToolbar";
 
 export default function BrewinEditor() {
   const baristaMode = useContext(BaristaContext);
@@ -25,13 +20,8 @@ export default function BrewinEditor() {
   const [responses, setResponses] = useState<RunResponse[]>([]);
 
   const { quarter, version } = interpreterVersion;
-  // TODO: don't make this stringly-typed :)
-  const currentVersions = quarter === "s23" ? S23_VERSIONS : F22_VERSIONS;
 
-  const lastResponse =
-    responses.length === 0 ? { iteration: 0 } : responses[responses.length - 1];
-
-  const { TEXT_CODE, TEXT_OUTPUT, TEXT_PROGRAMS, TEXT_RUN, TEXT_STDIN } =
+  const { TEXT_OUTPUT, TEXT_PROGRAMS, TEXT_STDIN } =
     getFlavourText(baristaMode);
 
   const setQuarter = (quarter: string) =>
@@ -93,45 +83,12 @@ export default function BrewinEditor() {
           stdin,
           output,
           interpreterVersion,
-          lastResponse.iteration + 1
+          responses.length === 0
+            ? 0
+            : responses[responses.length - 1].iteration + 1
         );
       });
   }
-
-  const QuarterSelect = () => (
-    <select
-      className="btn btn-blue-outline mr-1 pl-1"
-      value={quarter}
-      onChange={(e) => setQuarter(e.target.value)}
-    >
-      <option value="f22">fall 2022</option>
-      <option value="s23">spring 2023</option>
-    </select>
-  );
-
-  const VersionSelect = () => (
-    <select
-      className="btn btn-blue-outline mr-1 pl-1"
-      value={version}
-      onChange={(e) => setVersion(e.target.value)}
-    >
-      {currentVersions.map(({ version, title }) => (
-        <option value={version} key={title}>
-          v{version}: {title}
-        </option>
-      ))}
-    </select>
-  );
-
-  const Toolbar = () => (
-    <div>
-      <QuarterSelect />
-      <VersionSelect />
-      <button className="btn btn-blue" onClick={runProgram}>
-        {TEXT_RUN}!
-      </button>
-    </div>
-  );
 
   const Sidebar = () => (
     <section>
@@ -165,10 +122,13 @@ export default function BrewinEditor() {
     <>
       <Sidebar />
       <div>
-        <section className="flex flex-row justify-between">
-          <h2 className="text-xl font-semibold">your {TEXT_CODE}</h2>
-          <Toolbar />
-        </section>
+        <EditorToolbar
+          quarter={quarter}
+          setQuarter={setQuarter}
+          version={version}
+          setVersion={setVersion}
+          runProgram={runProgram}
+        />
 
         <ProgramEditor />
 
