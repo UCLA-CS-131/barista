@@ -2,7 +2,7 @@ import { useState } from "react";
 import Editor from "react-simple-code-editor";
 import PreviousBrew from "./PreviousBrew";
 import {
-  DEFAULT_PROGRAM,
+  DEFAULT_VERSION,
   ENDPOINT,
   F22_VERSIONS,
   S23_VERSIONS,
@@ -11,10 +11,13 @@ import {
 import { InterpreterVersion, LoadProgram, RunResponse } from "./types";
 
 function App() {
-  const [program, setProgram] = useState(DEFAULT_PROGRAM);
+  const [program, setProgram] = useState(DEFAULT_VERSION.defaultProgram);
   const [stdin, setStdin] = useState("");
   const [interpreterVersion, setInterpreterVersion] =
-    useState<InterpreterVersion>({ quarter: "s23", version: "2" });
+    useState<InterpreterVersion>({
+      quarter: DEFAULT_VERSION.quarter,
+      version: DEFAULT_VERSION.version,
+    });
   const [output, setOutput] = useState("");
   const [responses, setResponses] = useState<RunResponse[]>([]);
   const [baristaMode, setBaristaMode] = useState(false);

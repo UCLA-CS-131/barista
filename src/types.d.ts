@@ -13,7 +13,7 @@ export type LoadProgram = (
   interpreterVersion: InterpreterVersion
 ) => void;
 
-// TODO: we can narrow these types
+// TODO: we can narrow these types from being stringly-typed
 export type InterpreterVersion = {
   quarter: string;
   version: string;
