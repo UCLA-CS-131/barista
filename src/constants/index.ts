@@ -5,6 +5,7 @@ const getFlavourText = (baristaMode: boolean) => {
   return {
     TEXT_CODE: baristaMode ? "recipe" : "code",
     TEXT_OUTPUT: baristaMode ? "brew" : "output",
+    TEXT_PROGRAM: baristaMode ? "blend" : "program",
     TEXT_PROGRAMS: baristaMode ? "blends" : "programs",
     TEXT_RUN: baristaMode ? "roast" : "run",
     TEXT_STDIN: baristaMode ? "add-ins" : "stdin",
