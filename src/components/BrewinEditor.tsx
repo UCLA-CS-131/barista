@@ -97,27 +97,6 @@ export default function BrewinEditor() {
     </section>
   );
 
-  const ProgramEditor = () => (
-    <Editor
-      className="editor border my-1"
-      value={program}
-      onValueChange={(program) => setProgram(program)}
-      highlight={(code) => code /* this is an identity -- no highlighting */}
-      padding={10}
-    />
-  );
-
-  const StdinEditor = () => (
-    <Editor
-      className="editor border my-1"
-      value={stdin}
-      onValueChange={(stdin) => setStdin(stdin)}
-      highlight={(code) => code /* this is an identity -- no highlighting */}
-      padding={10}
-      style={{ minHeight: "1rem" }}
-    />
-  );
-
   return (
     <>
       <Sidebar />
@@ -130,10 +109,27 @@ export default function BrewinEditor() {
           runProgram={runProgram}
         />
 
-        <ProgramEditor />
+        <Editor
+          className="editor border my-1"
+          value={program}
+          onValueChange={(program) => setProgram(program)}
+          highlight={
+            (code) => code /* this is an identity -- no highlighting */
+          }
+          padding={10}
+        />
 
         <h2 className="text-xl font-semibold">your {TEXT_STDIN}</h2>
-        <StdinEditor />
+        <Editor
+          className="editor border my-1"
+          value={stdin}
+          onValueChange={(stdin) => setStdin(stdin)}
+          highlight={
+            (code) => code /* this is an identity -- no highlighting */
+          }
+          padding={10}
+          style={{ minHeight: "1rem" }}
+        />
 
         <h2 className="text-xl font-semibold mt-3 mb-1">your {TEXT_OUTPUT}</h2>
         <textarea
