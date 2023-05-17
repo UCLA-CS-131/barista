@@ -121,7 +121,7 @@ export default function BrewinEditor() {
       pattern: /;;;.*/,
       alias: ["comment", "title"],
     },
-    comment: /#./,
+    comment: /#.*/,
     string: {
       pattern: /"(?:[^"\\]|\\.)*"/,
       greedy: true,
