@@ -178,17 +178,17 @@ export default function BrewinEditor() {
       lookbehind: true,
     },
     defvar: {
-      pattern: RegExp(par + "def(?:const|custom|group|var)\\s+" + symbol),
+      pattern: RegExp(par + "field\\s+" + symbol),
       lookbehind: true,
       inside: {
-        keyword: /^def[a-z]+/,
+        keyword: /^fiel[a-z]+/,
         variable: RegExp(symbol),
       },
     },
     defun: {
       pattern: RegExp(
         par +
-          /(?:cl-)?(?:defmacro|defun\*?)\s+/.source +
+          /(?:cl-)?(?:defmacro|defun|method\*?)\s+/.source +
           symbol +
           /\s+\(/.source +
           nestedPar +
@@ -197,7 +197,7 @@ export default function BrewinEditor() {
       lookbehind: true,
       greedy: true,
       inside: {
-        keyword: /^(?:cl-)?def\S+/,
+        keyword: /^(?:cl-)?def|metho\S+/,
         // See below, this property needs to be defined later so that it can
         // reference the language object.
         arguments: null,
