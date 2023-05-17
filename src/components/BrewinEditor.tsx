@@ -170,7 +170,7 @@ export default function BrewinEditor() {
       alias: "keyword",
     },
     boolean: {
-      pattern: primitive(/nil|t/.source),
+      pattern: primitive(/false|true/.source),
       lookbehind: true,
     },
     number: {
