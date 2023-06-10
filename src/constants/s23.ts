@@ -1,8 +1,115 @@
+const par = "(\\()";
+const symbol = /(?!\d)[-+*/~!@$%^=<>{}\w]+/.source;
+const space = "(?=\\s)";
+const optionalSpace = "\\s*";
+
+function primitive(pattern: string) {
+  return RegExp(
+    /([\s([])/.source + "(?:" + pattern + ")" + /(?=[\s)])/.source
+  );
+}
+
+const brewinV1 = {
+  comment: /#.*/,
+  string: {
+    pattern: /"(?:[^"\\]|\\.)*"/,
+    greedy: true,
+    inside: {
+      argument: /[-A-Z]+(?=[.,\s])/,
+      symbol: RegExp("`" + symbol + "'"),
+    },
+  },
+  keyword: [
+    {
+      pattern: RegExp(
+        par + optionalSpace +
+          "(?:and|(?:cl-)?if|while|(?:lexical-)?let\\*?|while\
+          )" +
+          space
+      ),
+      lookbehind: true,
+    },
+    {
+      pattern: RegExp(
+        par + optionalSpace + "(?:begin|set|print|call)" + space
+      ),
+      lookbehind: true,
+    },
+    {
+      pattern: primitive(/return|inputi|inputs/.source),
+      lookbehind: true,
+    }
+  ],
+  class: {
+    pattern: primitive(/class/.source),
+    lookbehind: true,
+    alias: "class-name",
+  },
+  boolean: {
+    pattern: primitive(/false|true/.source),
+    lookbehind: true,
+  },
+  classRefs: {
+    pattern: primitive(/me/.source),
+    lookbehind: true,
+  },
+  new: {
+    pattern: primitive(/new/.source),
+    lookbehind: true,
+  },
+  null: {
+    pattern: primitive(/null/.source),
+    lookbehind: true,
+  },
+  number: {
+    pattern: primitive(/[-+]?\d+(?:\.\d*)?/.source),
+    lookbehind: true,
+  },
+  classAttributes: {
+    pattern: primitive(/method|field/.source),
+    lookbehind: true,
+  },
+  punctuation: [
+    // open paren, brackets, and close paren
+    /(?:['`,]?\(|[)\[\]])/, //eslint-disable-line
+  ],
+};
+
+const brewinV2 = {
+  ...brewinV1,
+  primitiveTypes: {
+    pattern: primitive(/void|int|bool|string/.source),
+    lookbehind: true,
+  },
+  classRefs: {
+    pattern: primitive(/me|super/.source),
+    lookbehind: true,
+  },
+};
+
+const brewinV3 = {
+  ...brewinV2,
+  class: {
+    pattern: primitive(/t?class/.source),
+    lookbehind: true,
+    alias: "class-name",
+  },
+  genericTypeConcatChar:{ 
+    pattern: RegExp(/@/.source),
+    lookbehind: true,
+  },
+  exceptionKeywords: {
+    pattern: RegExp(par + "try|throw\\s+"),
+    lookbehind: true,
+  },
+};
+
 export const S23_VERSIONS = [
   {
     version: "1",
     quarter: "s23",
     title: "brewin",
+    highlighter: brewinV1,
     defaultProgram: `(class person
   (field name "")
   (field age 0)
@@ -27,6 +134,7 @@ export const S23_VERSIONS = [
     version: "2",
     quarter: "s23",
     title: "brewin++",
+    highlighter: brewinV2,
     defaultProgram: `(class main
     (method int value_or_zero ((int q))
       (begin
@@ -48,6 +156,7 @@ export const S23_VERSIONS = [
     version: "3",
     quarter: "s23",
     title: "brewin##",
+    highlighter: brewinV3,
     defaultProgram: `(tclass node (field_type)
     (field node@field_type next null)
     (field field_type value)

@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import Editor from "react-simple-code-editor";
-import { DEFAULT_VERSION, ENDPOINT, getFlavourText } from "../constants";
+import { DEFAULT_VERSION, ENDPOINT, getFlavourText, S23_VERSIONS } from "../constants";
 import { InterpreterVersion, RunResponse } from "../types";
 import { BaristaContext } from "../BaristaContext";
 import Prism from "prismjs";
@@ -8,6 +8,13 @@ import "./BrewinEditor.css";
 
 import PastBrews from "./PastBrews";
 import EditorToolbar from "./EditorToolbar";
+
+function getHighlighter(quarter: string, version: string){
+  if (quarter === "s23"){
+    return S23_VERSIONS[parseInt(version) - 1]?.highlighter ?? {};
+  }
+  return {};
+}
 
 export default function BrewinEditor() {
   const baristaMode = useContext(BaristaContext);
@@ -100,113 +107,6 @@ export default function BrewinEditor() {
     </section>
   );
 
-  const par = "(\\()";
-  const symbol = /(?!\d)[-+*/~!@$%^=<>{}\w]+/.source;
-  const space = "(?=\\s)";
-  const optionalSpace = "\\s*";
-
-  function primitive(pattern: string) {
-    return RegExp(
-      /([\s([])/.source + "(?:" + pattern + ")" + /(?=[\s)])/.source
-    );
-  }
-
-  const brewinV1 = {
-    comment: /#.*/,
-    string: {
-      pattern: /"(?:[^"\\]|\\.)*"/,
-      greedy: true,
-      inside: {
-        argument: /[-A-Z]+(?=[.,\s])/,
-        symbol: RegExp("`" + symbol + "'"),
-      },
-    },
-    keyword: [
-      {
-        pattern: RegExp(
-          par +
-            optionalSpace +
-            "(?:and|(?:cl-)?if|while|(?:lexical-)?let\\*?|while\
-            )" +
-            space
-        ),
-        lookbehind: true,
-      },
-      {
-        pattern: RegExp(
-          par + optionalSpace + "(?:begin|set|print|call)" + space
-        ),
-        lookbehind: true,
-      },
-      {
-        pattern: primitive(/return|inputi|inputs/.source),
-        lookbehind: true,
-      },
-    ],
-    class: {
-      pattern: primitive(/class/.source),
-      lookbehind: true,
-      alias: "class-name",
-    },
-    boolean: {
-      pattern: primitive(/false|true/.source),
-      lookbehind: true,
-    },
-    classRefs: {
-      pattern: primitive(/me/.source),
-      lookbehind: true,
-    },
-    new: {
-      pattern: primitive(/new/.source),
-      lookbehind: true,
-    },
-    null: {
-      pattern: primitive(/null/.source),
-      lookbehind: true,
-    },
-    number: {
-      pattern: primitive(/[-+]?\d+(?:\.\d*)?/.source),
-      lookbehind: true,
-    },
-    classAttributes: {
-      pattern: primitive(/method|field/.source),
-      lookbehind: true,
-    },
-    punctuation: [
-      // open paren, brackets, and close paren
-      /(?:['`,]?\(|[)\[\]])/, //eslint-disable-line
-    ],
-  };
-
-  const brewinV2 = {
-    ...brewinV1,
-    primitiveTypes: {
-      pattern: primitive(/void|int|bool|string/.source),
-      lookbehind: true,
-    },
-    classRefs: {
-      pattern: primitive(/me|super/.source),
-      lookbehind: true,
-    },
-  };
-
-  const brewinV3 = {
-    ...brewinV2,
-    class: {
-      pattern: primitive(/t?class/.source),
-      lookbehind: true,
-      alias: "class-name",
-    },
-    genericTypeConcatChar: {
-      pattern: RegExp(/@/.source),
-      lookbehind: true,
-    },
-    exceptionKeywords: {
-      pattern: RegExp(par + "try|throw\\s+"),
-      lookbehind: true,
-    },
-  };
-
   return (
     <>
       <Sidebar />
@@ -223,7 +123,7 @@ export default function BrewinEditor() {
           className="editor border my-1"
           value={program}
           onValueChange={(program) => setProgram(program)}
-          highlight={(program) => Prism.highlight(program, brewinV3, "brewin")}
+          highlight={(program) => Prism.highlight(program, getHighlighter(quarter, version), "brewin")}
           padding={10}
         />
 
