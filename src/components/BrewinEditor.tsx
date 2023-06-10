@@ -4,7 +4,7 @@ import { DEFAULT_VERSION, ENDPOINT, getFlavourText } from "../constants";
 import { InterpreterVersion, RunResponse } from "../types";
 import { BaristaContext } from "../BaristaContext";
 import Prism from "prismjs";
-import "../prism.css";
+import "./BrewinEditor.css";
 
 import PastBrews from "./PastBrews";
 import EditorToolbar from "./EditorToolbar";
@@ -99,28 +99,19 @@ export default function BrewinEditor() {
       <PastBrews responses={responses} loadProgram={loadProgram} />
     </section>
   );
-  
+
   const par = "(\\()";
   const symbol = /(?!\d)[-+*/~!@$%^=<>{}\w]+/.source;
-  const nestedPar =
-    /(?:[^()]|\((?:[^()]|\((?:[^()]|\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))*\))*\))*/
-      .source;
+  const space = "(?=\\s)";
+  const optionalSpace = "\\s*";
+
   function primitive(pattern: string) {
     return RegExp(
       /([\s([])/.source + "(?:" + pattern + ")" + /(?=[\s)])/.source
     );
   }
-  function simple_form(name: string) {
-    return RegExp(/(\()/.source + "(?:" + name + ")" + /(?=[\s\)])/.source); //eslint-disable-line
-  }
-  const space = "(?=\\s)";
-  const language = {
-    // Three or four semicolons are considered a heading.
-    // See https://www.gnu.org/software/emacs/manual/html_node/elisp/Comment-Tips.html
-    heading: {
-      pattern: /;;;.*/,
-      alias: ["comment", "title"],
-    },
+
+  const brewinV1 = {
     comment: /#.*/,
     string: {
       pattern: /"(?:[^"\\]|\\.)*"/,
@@ -130,23 +121,12 @@ export default function BrewinEditor() {
         symbol: RegExp("`" + symbol + "'"),
       },
     },
-    "quoted-symbol": {
-      pattern: RegExp("#?'" + symbol),
-      alias: ["variable", "symbol"],
-    },
-    "lisp-property": {
-      pattern: RegExp(":" + symbol),
-      alias: "property",
-    },
-    splice: {
-      pattern: RegExp(",@?" + symbol),
-      alias: ["symbol", "variable"],
-    },
     keyword: [
       {
         pattern: RegExp(
           par +
-            "(?:and|(?:cl-)?letf|cl-loop|cond|cons|error|if|(?:lexical-)?let\\*?|message|not|null|or|provide|require|setq|unless|use-package|when|while\
+            optionalSpace +
+            "(?:and|(?:cl-)?if|while|(?:lexical-)?let\\*?|while\
             )" +
             space
         ),
@@ -154,92 +134,77 @@ export default function BrewinEditor() {
       },
       {
         pattern: RegExp(
-          par + "(?:append|by|collect|concat|do|finally|for|in|return)" + space
+          par + optionalSpace + "(?:begin|set|print|call)" + space
         ),
         lookbehind: true,
       },
+      {
+        pattern: primitive(/return|inputi|inputs/.source),
+        lookbehind: true,
+      },
     ],
-    declare: {
-      pattern: simple_form(/declare/.source),
+    class: {
+      pattern: primitive(/class/.source),
       lookbehind: true,
-      alias: "keyword",
-    },
-    interactive: {
-      pattern: simple_form(/interactive/.source),
-      lookbehind: true,
-      alias: "keyword",
+      alias: "class-name",
     },
     boolean: {
       pattern: primitive(/false|true/.source),
+      lookbehind: true,
+    },
+    classRefs: {
+      pattern: primitive(/me/.source),
+      lookbehind: true,
+    },
+    new: {
+      pattern: primitive(/new/.source),
+      lookbehind: true,
+    },
+    null: {
+      pattern: primitive(/null/.source),
       lookbehind: true,
     },
     number: {
       pattern: primitive(/[-+]?\d+(?:\.\d*)?/.source),
       lookbehind: true,
     },
-    defvar: {
-      pattern: RegExp(par + "field\\s+" + symbol),
-      lookbehind: true,
-      inside: {
-        keyword: /^fiel[a-z]+/,
-        variable: RegExp(symbol),
-      },
-    },
-    defun: {
-      pattern: RegExp(
-        par +
-          /(?:cl-)?(?:defmacro|defun|method\*?)\s+/.source +
-          symbol +
-          /\s+\(/.source +
-          nestedPar +
-          /\)/.source
-      ),
-      lookbehind: true,
-      greedy: true,
-      inside: {
-        keyword: /^(?:cl-)?def|metho\S+/,
-        // See below, this property needs to be defined later so that it can
-        // reference the language object.
-        arguments: null,
-        function: {
-          pattern: RegExp("(^\\s)" + symbol),
-          lookbehind: true,
-        },
-        punctuation: /[()]/,
-      },
-    },
-    lambda: {
-      pattern: RegExp(
-        par +
-          "lambda\\s+\\(\\s*(?:&?" +
-          symbol +
-          "(?:\\s+&?" +
-          symbol +
-          ")*\\s*)?\\)"
-      ),
-      lookbehind: true,
-      greedy: true,
-      inside: {
-        keyword: /^lambda/,
-        // See below, this property needs to be defined later so that it can
-        // reference the language object.
-        arguments: null,
-        punctuation: /[()]/,
-      },
-    },
-    car: {
-      pattern: RegExp(par + symbol),
+    classAttributes: {
+      pattern: primitive(/method|field/.source),
       lookbehind: true,
     },
     punctuation: [
       // open paren, brackets, and close paren
       /(?:['`,]?\(|[)\[\]])/, //eslint-disable-line
-      // cons
-      {
-        pattern: /(\s)\.(?=\s)/,
-        lookbehind: true,
-      },
     ],
+  };
+
+  const brewinV2 = {
+    ...brewinV1,
+    primitiveTypes: {
+      pattern: primitive(/void|int|bool|string/.source),
+      lookbehind: true,
+    },
+    classRefs: {
+      pattern: primitive(/me|super/.source),
+      lookbehind: true,
+    },
+  };
+
+  const brewinV3 = {
+    ...brewinV2,
+    class: {
+      pattern: primitive(/t?class/.source),
+      lookbehind: true,
+      alias: "class-name",
+    },
+    genericTypeConcatChar: {
+      pattern: RegExp(/@/.source),
+      lookbehind: true,
+    },
+    exceptionKeywords: {
+      pattern: RegExp(par + "try|throw\\s+"),
+      lookbehind: true,
+    },
   };
 
   return (
@@ -258,7 +223,7 @@ export default function BrewinEditor() {
           className="editor border my-1"
           value={program}
           onValueChange={(program) => setProgram(program)}
-          highlight={(program) => Prism.highlight(program, language, "js")}
+          highlight={(program) => Prism.highlight(program, brewinV3, "brewin")}
           padding={10}
         />
 
@@ -267,7 +232,7 @@ export default function BrewinEditor() {
           className="editor border my-1"
           value={stdin}
           onValueChange={(stdin) => setStdin(stdin)}
-          highlight={(code) => Prism.highlight(code, language, "js")}
+          highlight={(code) => code}
           padding={10}
           style={{ minHeight: "1rem" }}
         />
