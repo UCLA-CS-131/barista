@@ -4,9 +4,7 @@ const space = "(?=\\s)";
 const optionalSpace = "\\s*";
 
 function primitive(pattern: string) {
-  return RegExp(
-    /([\s([])/.source + "(?:" + pattern + ")" + /(?=[\s)])/.source
-  );
+  return RegExp(/([\s([])/.source + "(?:" + pattern + ")" + /(?=[\s)])/.source);
 }
 
 const brewinV1 = {
@@ -22,7 +20,8 @@ const brewinV1 = {
   keyword: [
     {
       pattern: RegExp(
-        par + optionalSpace +
+        par +
+          optionalSpace +
           "(?:and|(?:cl-)?if|while|(?:lexical-)?let\\*?|while\
           )" +
           space
@@ -30,15 +29,13 @@ const brewinV1 = {
       lookbehind: true,
     },
     {
-      pattern: RegExp(
-        par + optionalSpace + "(?:begin|set|print|call)" + space
-      ),
+      pattern: RegExp(par + optionalSpace + "(?:begin|set|print|call)" + space),
       lookbehind: true,
     },
     {
       pattern: primitive(/return|inputi|inputs/.source),
       lookbehind: true,
-    }
+    },
   ],
   class: {
     pattern: primitive(/class/.source),
@@ -94,7 +91,7 @@ const brewinV3 = {
     lookbehind: true,
     alias: "class-name",
   },
-  genericTypeConcatChar:{ 
+  genericTypeConcatChar: {
     pattern: RegExp(/@/.source),
     lookbehind: true,
   },
