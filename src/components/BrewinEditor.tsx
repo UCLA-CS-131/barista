@@ -1,10 +1,20 @@
 import { useContext, useState } from "react";
 import Editor from "react-simple-code-editor";
-import { DEFAULT_VERSION, ENDPOINT, getFlavourText } from "../constants";
+import { DEFAULT_VERSION, ENDPOINT, getFlavourText, S23_VERSIONS } from "../constants";
 import { InterpreterVersion, RunResponse } from "../types";
 import { BaristaContext } from "../BaristaContext";
+import Prism from "prismjs";
+import "./BrewinEditor.css";
+
 import PastBrews from "./PastBrews";
 import EditorToolbar from "./EditorToolbar";
+
+function getHighlighter(quarter: string, version: string){
+  if (quarter === "s23"){
+    return S23_VERSIONS[parseInt(version) - 1]?.highlighter ?? {};
+  }
+  return {};
+}
 
 export default function BrewinEditor() {
   const baristaMode = useContext(BaristaContext);
@@ -113,9 +123,7 @@ export default function BrewinEditor() {
           className="editor border my-1"
           value={program}
           onValueChange={(program) => setProgram(program)}
-          highlight={
-            (code) => code /* this is an identity -- no highlighting */
-          }
+          highlight={(program) => Prism.highlight(program, getHighlighter(quarter, version), "brewin")}
           padding={10}
         />
 
@@ -124,9 +132,7 @@ export default function BrewinEditor() {
           className="editor border my-1"
           value={stdin}
           onValueChange={(stdin) => setStdin(stdin)}
-          highlight={
-            (code) => code /* this is an identity -- no highlighting */
-          }
+          highlight={(code) => code}
           padding={10}
           style={{ minHeight: "1rem" }}
         />
